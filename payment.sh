@@ -64,10 +64,12 @@ cd /app
 pip3 install -r requirements.txt &>>$log_file
 validate $? "payment dependencies"  
 
+cp $script_dir/payment.service /etc/systemd/system/payment.service &>>$log_file
+validate $? "payment service file copy"
 systemctl daemon-reload &>>$log_file
 validate $? "daemon reload"
 systemctl enable payment &>>$log_file
 validate $? "payment enable"
-systemctl restart payment &>>$log_file
+systemctl start payment &>>$log_file
 validate $? "payment start" 
 
