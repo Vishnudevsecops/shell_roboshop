@@ -57,10 +57,10 @@ curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shippin
 validate $? "shipping download"
 
 cd /app 
-VALIDATE $? "Changing to app directory"
+validate $? "Changing to app directory"
 
 rm -rf /app/*
-VALIDATE $? "Removing existing code"
+validate $? "Removing existing code"
 
 unzip /tmp/shipping.zip -d /app &>>$log_file
 validate $? "shipping unzip"
