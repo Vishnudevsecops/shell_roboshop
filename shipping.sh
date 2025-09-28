@@ -65,6 +65,8 @@ validate $? "Removing existing code"
 unzip /tmp/shipping.zip -d /app &>>$log_file
 validate $? "shipping unzip"
 
+mvn clean package &>>$log_file
+validate $? "maven build"
 mv target/shipping-1.0.jar shipping.jar &>>$log_file
 validate $? "shipping rename"
 
