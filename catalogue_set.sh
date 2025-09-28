@@ -2,7 +2,7 @@
 
 #exit on any error, undefined variable or error in a pipe
 set -euo pipefail 
--------------------------
+#-------------------------
 # Color Codes
 # -------------------------
 R="\e[31m" #Red
