@@ -96,7 +96,7 @@ validate $? "Mongosh client"
 # Check if the catalogue database is already populated
 INDEX=$(mongosh --quiet --host "$mongodb_host" --eval "db.getMongo().getDBNames().indexOf('catalogue')") &>>"$LOG_FILE"
 
-if [ "$INDEX" -eq -1 ]; then
+if [ "$INDEX" -eq -0 ]; then
     mongosh --host "$mongodb_host" </app/db/master-data.js &>>"$LOG_FILE"
     validate $? "Load catalogue products"
 else
