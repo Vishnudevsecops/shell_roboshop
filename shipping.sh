@@ -11,6 +11,7 @@ N="\e[0m"  #No Color
 user_rootaccess=$(id -u)
 
 mongodb_host="mongodb.techup.fun"
+mysql_host="mysql.techup.fun"
 script_dir=$(pwd)
 #create folder in log folder 
 logs_folder="/var/log/shell-roboshop"
@@ -74,11 +75,14 @@ validate $? "shipping start"
 dnf install mysql -y &>>$log_file
 validate $? "mysql client"
 
-mysql -h mysql.techup.fun -uroot -pRoboShop@1 < /app/db/schema.sql &>>$log_file
-validate $? "shipping schema load"
-
-mysql -h mysql.techup.fun -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$log_file
-validate $? "shipping master data load" 
+mysql -h $mysql_host -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
+if [ $? -ne 0 ]; then
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql  &>>$LOG_FILE
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+else
+    echo -e "Shipping data is already loaded ... $Y SKIPPING $N"
+fi
 
 systemctl restart shipping &>>$log_file
 validate $? "shipping restart"
