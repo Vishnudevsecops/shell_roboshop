@@ -50,7 +50,7 @@ else
     echo -e "roboshop user already exist..... $Y Skipped $N" | tee -a $log_file
 fi
 
-mkdir /app &>>$log_file
+mkdir -p /app &>>$log_file
 validate $? "/app directory creation"
 
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file
