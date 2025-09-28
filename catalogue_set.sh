@@ -94,4 +94,4 @@ fi
 systemctl restart catalogue &>>$log_file
 echo -e "Loading products and restarting catalogue ... $G SUCCESS $N"
 
-echo -e "Script execution completed $G Successful $N" | tee -a $log_file
+echo -e "Script execution completed at : $(date) $G Successful $N" | tee -a $log_file

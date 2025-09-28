@@ -1,0 +1,53 @@
+#!/bin/bash
+# -------------------------
+# Color Codes
+# -------------------------
+R="\e[31m" #Red
+G="\e[32m" #Green
+Y="\e[33m" #Yellow
+N="\e[0m"  #No Color    
+
+#check if current user has root access
+user_rootaccess=$(id -u)
+
+mongodb_host="mongodb.techup.fun"
+script_dir=$(pwd)
+#create folder in log folder 
+logs_folder="/var/log/shell-roboshop"
+#removing .sh from script name to create a log file
+script_name=$( echo $0 | cut -d "." -f1 )
+log_file="$logs_folder/$script_name.log" 
+
+mkdir -p $logs_folder
+echo "script started excuting at : $(date)" | tee -a $log_file
+#if user does not have root access
+if [ $user_rootaccess -ne 0 ]; then 
+    echo "Error:: Please run the script using root access"
+    exit 1
+fi
+
+# Function to validate installation status
+validate(){
+    if [ $1 -ne 0 ]; then
+        echo -e "error:: $2 $R failed $N" | tee -a $log_file
+        exit 1
+    else
+        echo -e "$2 $G Completed $N" | tee -a $log_file
+    fi
+
+}
+
+dnf module disable redis -y &>>$log_file
+validate $? "Redis module disable"
+dnf module enable redis:7 -y &>>$log_file
+validate $? "Redis module enable"
+dnf install redis -y &>>$log_file
+validate $? "Redis"
+
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+validate $? "Redis config"
+
+systemctl enable redis &>>$log_file
+validate $? "Redis enable"
+systemctl start redis &>>$log_file
+validate $? "Redis start"
