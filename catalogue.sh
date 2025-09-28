@@ -44,6 +44,7 @@ validate $? "Nodejs module enable"
 dnf install nodejs -y &>>$log_file
 validate $? "Nodejs"
 
+#check if roboshop user exist
 id roboshop &>>$log_file
 
 if [ $? -ne 0 ]; then
@@ -53,17 +54,21 @@ else
     echo -e "roboshop user already exist..... $Y Skipped $N" | tee -a $log_file
 fi
 
+#create app directory
 mkdir -p /app &>>$log_file
 validate $? "/app directory creation"
 
+#download catalogue code
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$log_file
 validate $? "catalogue download"
 cd /app
 validate $? "changing directory to /app"
 
+#remove old content
 rm -rf /app/* &>>$log_file
 validate $? "removing old content"
 
+#unzip the content
 unzip /tmp/catalogue.zip &>>$log_file
 validate $? "catalogue unzip"
 
@@ -71,6 +76,7 @@ cd /app || { echo "Failed to change to /app"; exit 1; }
 npm install &>>$log_file
 validate $? "npm dependencies"
 
+#copy service file
 cp $script_dir/catalogue.service /etc/systemd/system/catalogue.service &>>$log_file
 validate $? "catalogue service file copy"
 
@@ -81,11 +87,13 @@ validate $? "catalogue enable"
 systemctl start catalogue &>>$log_file
 validate $? "catalogue start"
 
+# copy mongodb repo file 
 cp $script_dir/mongodb.repo /etc/yum.repos.d/mongo.repo &>>$log_file
 validate $? "Mongodb repo setup"
 dnf install mongodb-mongosh -y &>>$log_file
 validate $? "Mongosh client"
 
+# Check if the catalogue database is already populated
 INDEX=$(mongosh --quiet --host "$mongodb_host" --eval "db.getMongo().getDBNames().indexOf('catalogue')") &>>"$LOG_FILE"
 
 if [ "$INDEX" -eq -1 ]; then
