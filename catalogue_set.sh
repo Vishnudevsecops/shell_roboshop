@@ -2,6 +2,10 @@
 
 #exit on any error, undefined variable or error in a pipe
 set -euo pipefail 
+
+#trap error message with line number and command
+trap 'echo "There is an error in $LINENO, Command is: $BASH_COMMAND"' ERR
+
 #-------------------------
 # Color Codes
 # -------------------------
