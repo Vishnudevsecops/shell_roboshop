@@ -53,12 +53,12 @@ fi
 mkdir -p /app &>>$log_file
 validate $? "/app directory creation"
 
-curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file
+curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file   
 validate $? "shipping download"
 
-cd /app 
-unzip /tmp/shipping.zip &>>$log_file
+unzip -o /tmp/shipping.zip -d /app &>>$log_file
 validate $? "shipping unzip"
+
 
 cd /app 
 mvn clean package &>>$log_file
