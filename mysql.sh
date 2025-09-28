@@ -38,7 +38,7 @@ validate(){
 }
 
 dnf install mysql-server -y &>>$log_file
-validate $? "Mysql"
+validate $? "Mysql installation"
 dnf enable mysqld &>>$log_file
 validate $? "Mysql enable"
 dnf start mysqld &>>$log_file
