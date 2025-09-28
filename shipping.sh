@@ -41,8 +41,14 @@ validate(){
 dnf install maven -y &>>$log_file
 validate $? "Maven installation"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$log_file
-validate $? "roboshop user" 
+id roboshop &>>$log_file
+
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$log_file
+    validate $? "roboshop user"
+else
+    echo -e "roboshop user already exist..... $Y Skipped $N" | tee -a $log_file
+fi
 
 mkdir /app &>>$log_file
 validate $? "/app directory creation"
