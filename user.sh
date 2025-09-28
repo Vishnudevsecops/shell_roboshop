@@ -59,7 +59,7 @@ mkdir -p /app &>>$log_file
 validate $? "/app directory creation"
 
 #download user code
-curl -o curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip &>>$log_file
+curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip &>>$log_file
 validate $? "user download"
 cd /app
 validate $? "changing directory to /app"
