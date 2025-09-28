@@ -53,7 +53,7 @@ fi
 mkdir -p /app &>>$log_file
 validate $? "/app directory creation"
 
-curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file
+curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file
 validate $? "shipping download"
 
 cd /app 
