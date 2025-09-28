@@ -94,13 +94,13 @@ dnf install mongodb-mongosh -y &>>$log_file
 validate $? "Mongosh client"
 
 # Check if the catalogue database is already populated
-INDEX=$(mongosh --quiet --host "$mongodb_host" --eval "db.getMongo().getDBNames().indexOf('catalogue')") &>>"$LOG_FILE"
+INDEX=$(mongosh $mongodb_host --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 
-if [ "$INDEX" -eq -0 ]; then
-    mongosh --host "$mongodb_host" </app/db/master-data.js &>>"$LOG_FILE"
-    validate $? "Load catalogue products"
+if [ $INDEX -le 0 ]; then
+    mongosh --host $mongodb_host </app/db/master-data.js &>>$LOG_FILE
+    VALIDATE $? "Load catalogue products"
 else
-    echo -e "Catalogue products already loaded ... ${Y}SKIPPING${N}" | tee -a "$LOG_FILE"
+    echo -e "Catalogue products already loaded ... $Y SKIPPING $N"
 fi
 
 systemctl restart catalogue &>>$log_file
