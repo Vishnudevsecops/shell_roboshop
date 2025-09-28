@@ -89,4 +89,5 @@ fi
 
 systemctl restart catalogue &>>$log_file
 echo -e "Loading products and restarting catalogue ... $G SUCCESS $N"
-echo -e "script executed successfully at : $(date)..... $G Successful $N " | tee -a $log_file
+echo -e "script executed successfully at: $(date) ..... ${G}Successful${N}" | tee -a "$log_file"
+
