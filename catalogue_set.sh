@@ -37,9 +37,9 @@ fi
 dnf module disable nodejs -y &>>$log_file
 dnf module enable nodejs:20 -y &>>$log_file
 dnf install nodejs -y &>>$log_file
-echo -e "Nodejs installation completed" "$G Successful $N | tee -a $log_file
+echo -e "Nodejs installation completed $G Successful $N"
 
-#check if roboshop user exist
+#status check function
 id roboshop &>>$log_file
 
 if [ $? -ne 0 ]; then
@@ -50,35 +50,35 @@ fi
 
 #create app directory
 mkdir -p /app &>>$log_file
-echo -e "/app directory created...." $G Successful $N | tee -a $log_file
+echo -e "/app directory created $G Successful $N" | tee -a $log_file
 
 #download catalogue code
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$log_file
-echo -e "catalogue code downloaded" $G Successful $N | tee -a $log_file
+echo -e "catalogue code downloaded $G Successful $N" | tee -a $log_file
 cd /app
 
 #remove old content
 rm -rf /app/* &>>$log_file
-echo -e "old content removed" $G Successful $N | tee -a $log_file
+echo -e "old content removed $G Successful $N" | tee -a $log_file
 #unzip the content
 unzip /tmp/catalogue.zip &>>$log_file
-echo -e "catalogue unzip completed" $G Successful $N | tee -a $log_file
+echo -e "catalogue unzip completed $G Successful $N" | tee -a $log_file
 
 cd /app || { echo "Failed to change to /app"; exit 1; }
 npm install &>>$log_file
-echo -e "npm dependencies installed" $G Successful $N | tee -a $log_file
+echo -e "npm dependencies installed $G Successful $N" | tee -a $log_file
 #copy service file
 cp $script_dir/catalogue.service /etc/systemd/system/catalogue.service &>>$log_file
-echo -e "catalogue service file copied" $G Successful $N | tee -a $log_file
+echo -e "catalogue service file copied $G Successful $N" | tee -a $log_file
 
 systemctl daemon-reload &>>$log_file
 systemctl enable catalogue &>>$log_file
 systemctl start catalogue &>>$log_file
-echo -e "catalogue service started" $G Successful $N | tee -a $log_file
+echo -e "catalogue service started $G Successful $N" | tee -a $log_file
 
 # copy mongodb repo file 
 cp $script_dir/mongodb.repo /etc/yum.repos.d/mongo.repo &>>$log_file
-echo -e "Mongodb repo file copied" $G Successful $N | tee -a $log_file
+echo -e "Mongodb repo file copied $G Successful $N" | tee -a $log_file
 dnf install mongodb-mongosh -y &>>$log_file
 echo -e "Mongosh client installed" $G Successful $N | tee -a $log_file
 
@@ -94,3 +94,4 @@ fi
 systemctl restart catalogue &>>$log_file
 echo -e "Loading products and restarting catalogue ... $G SUCCESS $N"
 
+echo -e "Script execution completed $G Successful $N" | tee -a $log_file
