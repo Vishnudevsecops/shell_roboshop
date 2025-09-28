@@ -56,13 +56,14 @@ validate $? "/app directory creation"
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$log_file   
 validate $? "shipping download"
 
-unzip -o /tmp/shipping.zip -d /app &>>$log_file
-validate $? "shipping unzip"
-
-
 cd /app 
-mvn clean package &>>$log_file
-validate $? "maven build"
+VALIDATE $? "Changing to app directory"
+
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
+
+unzip /tmp/shipping.zip -d /app &>>$log_file
+validate $? "shipping unzip"
 
 mv target/shipping-1.0.jar shipping.jar &>>$log_file
 validate $? "shipping rename"
@@ -75,8 +76,6 @@ systemctl daemon-reload &>>$log_file
 validate $? "daemon reload"
 systemctl enable shipping &>>$log_file
 validate $? "shipping enable"
-systemctl start shipping &>>$log_file
-validate $? "shipping start"
 
 dnf install mysql -y &>>$log_file
 validate $? "mysql client"
